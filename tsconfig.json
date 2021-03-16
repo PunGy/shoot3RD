@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "target": "esnext",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "allowJs": true,
+        "esModuleInterop": true,
+        "outDir": "./dist",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "lib": [
+            "es5",
+            "DOM"
+        ],
+        "paths": {
+            "@src/*": ["./src/*"]
+        }
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+      "node_modules",
+      "**/*.spec.ts"
+    ],
+}

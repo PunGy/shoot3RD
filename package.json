@@ -1,0 +1,29 @@
+{
+  "name": "shoot3rd",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "author": "Maxim Yakovlev",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
+  },
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.22.1",
+    "module-alias": "^2.2.2",
+    "prettier": "^2.2.1",
+    "prettier-eslint": "^12.0.0",
+    "ts-loader": "^8.0.18",
+    "typescript": "^4.2.3",
+    "webpack": "^5.26.1",
+    "webpack-cli": "^4.5.0",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3"
+  },
+  "_moduleAliases": {
+    "@src": "./dist"
+  }
+}
