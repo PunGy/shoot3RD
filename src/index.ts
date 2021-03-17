@@ -1,5 +1,4 @@
-import World from './engine'
+import Render from './engine/Render'
 
-const world = new World()
-
-world.rect(0, 0, 110, 'red')
+Render.initialize()
+Render.rect(100, 100, 200, 'red')
