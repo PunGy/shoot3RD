@@ -1,8 +1,10 @@
-export default class World {
+export default class World
+{
     public ctx: CanvasRenderingContext2D
     public canvasEl: HTMLCanvasElement
 
-    constructor() {
+    constructor()
+    {
         this.canvasEl = document.getElementById('world') as HTMLCanvasElement
         this.ctx = this.canvasEl.getContext('2d')
 
@@ -15,7 +17,7 @@ export default class World {
     {
         const { ctx } = this
         const prevStyle = ctx.fillStyle
-        
+
         ctx.fillStyle = color
         ctx.fillRect(x, y, size, size)
 
