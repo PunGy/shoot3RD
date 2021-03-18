@@ -1,20 +1,9 @@
-import { ObjectsMap } from './index'
 import Render from '@src/engine/Render'
+import BaseObject from '@src/engine/Objects/BaseObject'
 
-function gameLoopFn({
-    dynamicObjects,
-    staticObjects,
-}: ObjectsMap)
+function gameLoopFn(objects: Array<BaseObject>)
 {
-    staticObjects.forEach((obj) =>
-    {
-        if (obj.needRender)
-        {
-            Render.draw(obj)
-            obj.needRender = false
-        }
-    })
-    dynamicObjects.forEach(Render.draw)
+    objects.forEach(Render.draw)
 }
 
 export default gameLoopFn

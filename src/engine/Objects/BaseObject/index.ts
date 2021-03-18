@@ -22,5 +22,4 @@ export default class BaseObject implements BaseObjectConstructor
     height: number
 
     texture: string | ((object: this, ctx: CanvasRenderingContext2D) => void)
-    needRender = true
 }

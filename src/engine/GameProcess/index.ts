@@ -1,23 +1,13 @@
 import gameLoopFn from './gameLoop'
-import DynamicObject from '@engine/Objects/DynamicObject'
 import BaseObject from '@engine/Objects/BaseObject'
 import Render from '@engine/Render'
 import { once } from '@src/utils/once'
-
-export interface ObjectsMap {
-    staticObjects: Array<BaseObject>;
-    dynamicObjects: Array<DynamicObject>;
-}
 
 export type State = 'play'|'menu'
 
 export default class GameProcess
 {
-    private static isPlay = false
-    private static objects: ObjectsMap = {
-        staticObjects: [],
-        dynamicObjects: [],
-    }
+    private static objects: Array<BaseObject> = []
     private static state: State = 'play'
     private static readonly fps = 20
     private static readonly fpsInterval = 1000 / GameProcess.fps
@@ -51,9 +41,6 @@ export default class GameProcess
 
     static registerObject<O extends BaseObject>(object: O)
     {
-        if (object instanceof BaseObject)
-            GameProcess.objects.staticObjects.push(object)
-        else
-            GameProcess.objects.dynamicObjects.push(object)
+        GameProcess.objects.push(object)
     }
 }
