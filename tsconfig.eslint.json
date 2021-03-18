@@ -17,12 +17,14 @@
             "DOM"
         ],
         "paths": {
-            "@src/*": ["./src/*"]
+            "@src/*": ["./src/*"],
+            "@engine/*": ["./src/engine/*"]
         }
     },
     "include": [
         "src/**/*.ts",
-        "./*.js"
+        "./*.js",
+        "types/**/*.ts"
     ],
     "exclude": [
         "node_modules"

@@ -18,11 +18,13 @@
         ],
         "paths": {
             "@src/*": ["./src/*"],
-            "@engine/*": ["./src/engine/*"]
+            "@engine/*": ["./src/engine/*"],
+            "@resources/*": ["./src/resources/*"]
         }
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "types/**/*.ts"
     ],
     "exclude": [
         "node_modules",

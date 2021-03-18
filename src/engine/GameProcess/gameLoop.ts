@@ -1,8 +1,10 @@
-import Render from '@src/engine/Render'
-import BaseObject from '@src/engine/Objects/BaseObject'
+import Render from '@engine/Render'
+import BaseObject from '@engine/Objects/BaseObject'
+import { BackgroundImage } from '@src/engine/GameProcess'
 
-function gameLoopFn(objects: Array<BaseObject>)
+function gameLoopFn(objects: Array<BaseObject>, backgroundImage?: BackgroundImage)
 {
+    Render.drawBackground(backgroundImage)
     objects.forEach(Render.draw)
 }
 

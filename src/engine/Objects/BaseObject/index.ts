@@ -9,7 +9,7 @@ export interface BaseObjectConstructor
     texture: string | ((object: this, ctx: CanvasRenderingContext2D) => void);
 }
 
-export default class BaseObject implements BaseObjectConstructor
+export default class BaseObject
 {
     constructor(initialValues: BaseObjectConstructor)
     {

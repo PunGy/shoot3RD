@@ -2,12 +2,20 @@ import gameLoopFn from './gameLoop'
 import BaseObject from '@engine/Objects/BaseObject'
 import Render from '@engine/Render'
 import { once } from '@src/utils/once'
+import RenderImage from '@src/engine/Render/RenderImage'
 
 export type State = 'play'|'menu'
+export interface BackgroundImage {
+    src: string;
+    splineSize: number;
+    img: HTMLImageElement;
+}
 
 export default class GameProcess
 {
     private static objects: Array<BaseObject> = []
+    private static backgroundImage?: BackgroundImage
+
     private static state: State = 'play'
     private static readonly fps = 20
     private static readonly fpsInterval = 1000 / GameProcess.fps
@@ -17,8 +25,6 @@ export default class GameProcess
     static initialize = once(() =>
     {
         Render.initialize()
-
-        GameProcess.startGame()
     })
 
     static startGame()
@@ -31,7 +37,7 @@ export default class GameProcess
                 if (time - prevTime > GameProcess.fpsInterval)
                 {
                     prevTime = time
-                    GameProcess.gameLoopFn(GameProcess.objects)
+                    GameProcess.gameLoopFn(GameProcess.objects, GameProcess.backgroundImage)
                 }
 
                 if (GameProcess.state === 'play') window.requestAnimationFrame(loop)
@@ -42,5 +48,12 @@ export default class GameProcess
     static registerObject<O extends BaseObject>(object: O)
     {
         GameProcess.objects.push(object)
+    }
+
+    static async setBackgroundImage(imageConfig: Omit<BackgroundImage, 'img'>)
+    {
+        const img = await RenderImage.createImage(imageConfig.src)
+
+        GameProcess.backgroundImage = { ...imageConfig, img }
     }
 }
