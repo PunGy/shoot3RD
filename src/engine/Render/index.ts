@@ -1,13 +1,18 @@
+import RenderPrimitives from './RenderPrimitives'
+import BaseObject from '@engine/Objects/BaseObject'
+import { once } from '@src/utils/once'
+
 export default class Render
 {
     static canvasEl: HTMLCanvasElement
     static ctx: CanvasRenderingContext2D
+    static renderPrimitives: RenderPrimitives
 
     /**
      * Initialize render
      * Cannot be called more than once!
      */
-    static initialize()
+    static initialize = once(() =>
     {
         if (
             Render.canvasEl !== undefined
@@ -16,20 +21,18 @@ export default class Render
 
         Render.canvasEl = document.getElementById('world') as HTMLCanvasElement
         Render.ctx = Render.canvasEl.getContext('2d')
+        Render.renderPrimitives = new RenderPrimitives(Render.ctx)
 
         const { innerWidth, innerHeight } = window
-        this.canvasEl.width = innerWidth
-        this.canvasEl.height = innerHeight
-    }
+        Render.canvasEl.width = innerWidth
+        Render.canvasEl.height = innerHeight
+    })
 
-    static rect(x: number, y: number, size: number, color: string)
+    static draw(object: BaseObject)
     {
-        const { ctx } = this
-        const prevStyle = ctx.fillStyle
-
-        ctx.fillStyle = color
-        ctx.fillRect(x, y, size, size)
-
-        ctx.fillStyle = prevStyle
+        if (typeof object.texture === 'function')
+        {
+            object.texture(object, Render.ctx)
+        }
     }
 }

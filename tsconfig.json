@@ -17,7 +17,8 @@
             "DOM"
         ],
         "paths": {
-            "@src/*": ["./src/*"]
+            "@src/*": ["./src/*"],
+            "@engine/*": ["./src/engine/*"]
         }
     },
     "include": [
