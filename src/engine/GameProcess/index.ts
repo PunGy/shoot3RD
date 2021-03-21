@@ -29,20 +29,19 @@ export default class GameProcess
 
     static startGame()
     {
-        if (GameProcess.state === 'play')
-        {
-            let prevTime = performance.now()
-            window.requestAnimationFrame(function loop(time)
-            {
-                if (time - prevTime > GameProcess.fpsInterval)
-                {
-                    prevTime = time
-                    GameProcess.gameLoopFn(GameProcess.objects, GameProcess.backgroundImage)
-                }
+        GameProcess.state = 'play'
 
-                if (GameProcess.state === 'play') window.requestAnimationFrame(loop)
-            })
-        }
+        let prevTime = performance.now()
+        window.requestAnimationFrame(function loop(time)
+        {
+            if (time - prevTime > GameProcess.fpsInterval)
+            {
+                prevTime = time
+                GameProcess.gameLoopFn(GameProcess.objects, GameProcess.backgroundImage)
+            }
+
+            if (GameProcess.state === 'play') window.requestAnimationFrame(loop)
+        })
     }
 
     static registerObject<O extends BaseObject>(object: O)
