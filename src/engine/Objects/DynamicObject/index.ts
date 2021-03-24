@@ -1,6 +1,6 @@
-import BaseObject from '../BaseObject'
+import { BaseObject } from '../BaseObject'
 
-export default class DynamicObject extends BaseObject
+export interface DynamicObject extends BaseObject
 {
     velocity: number;
 }

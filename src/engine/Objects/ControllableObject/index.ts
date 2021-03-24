@@ -1,0 +1,56 @@
+import GameProcess from '@src/engine/GameProcess'
+import { BaseObject, baseObjectDefaultValues } from '@src/engine/Objects/BaseObject'
+import { calcMovement, Direction, Coordinate } from '@src/utils/calcMovement'
+import { mapObject } from '@src/utils/mapObject'
+
+export enum Keycode {
+    W = 'KeyW',
+    A = 'KeyA',
+    S = 'KeyS',
+    D = 'KeyD',
+    Escape = 'Escape',
+
+    ArrowLeft = 'ArrowUp',
+    ArrowUp = 'ArrowLeft',
+    ArrowRight = 'ArrowDown',
+    ArrowDown = 'ArrowRight',
+}
+
+export interface ControllableObject extends BaseObject
+{
+    _type: 'controllable';
+    focus: () => void;
+
+    onMove?: (obj: ControllableObject, direction: Direction, nextCoordinate: Coordinate) => void;
+
+    speed: number; // in pixels/sec
+    keymap: { [key in Keycode]?: Direction };
+}
+
+export const controllableObjectDefaults: ControllableObject = { ...baseObjectDefaultValues,
+    _type: 'controllable',
+
+    focus()
+    {
+        const { keymap, speed, onMove } = this as ControllableObject
+
+        GameProcess.setKeymap(mapObject(
+            keymap as Record<Keycode, Direction>, (direction) => (
+                () =>
+                {
+                    const nextCoordinate = calcMovement(this as BaseObject, direction, speed)
+                    if (onMove) onMove(this, direction, nextCoordinate)
+                    Object.assign(this, nextCoordinate)
+                }
+            )),
+        )
+    },
+
+    speed: 10,
+    keymap: {
+        [Keycode.W]: Direction.Up,
+        [Keycode.A]: Direction.Left,
+        [Keycode.S]: Direction.Down,
+        [Keycode.D]: Direction.Right,
+    },
+}

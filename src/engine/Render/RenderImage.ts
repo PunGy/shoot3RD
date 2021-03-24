@@ -1,20 +1,35 @@
 export default class RenderImage
 {
     private ctx: CanvasRenderingContext2D
+    private imageCache: Record<string, HTMLImageElement> = {}
+
 
     constructor(ctx: CanvasRenderingContext2D)
     {
         this.ctx = ctx
     }
 
-    static createImage = (src: string) => new Promise<HTMLImageElement>(
-        (res) =>
-        {
+    public async cacheImage(src: string)
+    {
+        const image = await RenderImage.createImage(src)
+        this.imageCache[src] = image
+    }
+    public getImageFromCache(src: string)
+    {
+        return this.imageCache[src]
+    }
 
-            const img = new Image()
-            img.src = src
+    static createImage (src: string)
+    {
+        return new Promise<HTMLImageElement>(
+            (res) =>
+            {
 
-            img.onload = () => res(img)
-        },
-    )
+                const img = new Image()
+                img.src = src
+
+                img.onload = () => res(img)
+            },
+        )
+    }
 }

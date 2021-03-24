@@ -1,5 +1,5 @@
 import Render from '@engine/Render'
-import BaseObject from '@engine/Objects/BaseObject'
+import { BaseObject } from '@engine/Objects/BaseObject'
 import { BackgroundImage } from '@src/engine/GameProcess'
 
 function gameLoopFn(objects: Array<BaseObject>, backgroundImage?: BackgroundImage)

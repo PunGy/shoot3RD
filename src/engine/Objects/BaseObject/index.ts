@@ -1,4 +1,6 @@
-export interface BaseObjectConstructor
+import DefaultTexture from '@resources/images/blocks/question.png'
+
+export interface BaseObject
 {
     x: number;
     y: number;
@@ -9,17 +11,12 @@ export interface BaseObjectConstructor
     texture: string | ((object: this, ctx: CanvasRenderingContext2D) => void);
 }
 
-export default class BaseObject
-{
-    constructor(initialValues: BaseObjectConstructor)
-    {
-        Object.assign(this, initialValues)
-    }
-    x: number
-    y: number
+export const baseObjectDefaultValues: BaseObject = {
+    x: 0,
+    y: 0,
 
-    width: number
-    height: number
+    width: 100,
+    height: 100,
 
-    texture: string | ((object: this, ctx: CanvasRenderingContext2D) => void)
+    texture: DefaultTexture,
 }

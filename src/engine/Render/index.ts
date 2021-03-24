@@ -1,5 +1,5 @@
 import RenderPrimitives from './RenderPrimitives'
-import BaseObject from '@engine/Objects/BaseObject'
+import { BaseObject } from '@engine/Objects/BaseObject'
 import { once } from '@src/utils/once'
 import { BackgroundImage } from '@src/engine/GameProcess'
 import RenderImage from '@src/engine/Render/RenderImage'
@@ -32,7 +32,16 @@ export default class Render
         if (typeof object.texture === 'function')
         {
             object.texture(object, Render.ctx)
+            return
         }
+
+        Render.ctx.drawImage(
+            Render.renderImage.getImageFromCache(object.texture),
+            object.x,
+            object.y,
+            object.width,
+            object.height,
+        )
     }
 
     static drawBackground(backgroundImage?: BackgroundImage)
