@@ -96,7 +96,7 @@ export default class GameProcess
     static async registerObject<O extends BaseObject>(object: O)
     {
         if (typeof object.texture === 'string')
-            Render.renderImage.cacheImage(object.texture)
+            await Render.renderImage.cacheImage(object.texture)
         GameProcess.objects.push(object)
     }
 
