@@ -1,6 +1,6 @@
 import GameProcess from '@src/engine/GameProcess'
 import type { BaseObject } from '@src/engine/Objects/BaseObject'
-import { calcMovement, Direction, Coordinate } from '@src/utils/calcMovement'
+import { calcMovement, Coordinate, Direction } from '@src/utils/calcMovement'
 import { mapObject } from '@src/utils/mapObject'
 
 export enum Keycode {
@@ -21,9 +21,10 @@ export interface ControllableObject
     _type: 'controllable';
     focus: () => void;
 
-    onMove?: (obj: ControllableObject, direction: Direction, nextCoordinate: Coordinate) => void;
+    onMove?: (obj: ControllableObject & BaseObject, direction: Direction, nextCoordinate: Coordinate) => void;
 
     speed: number; // in pixels/sec
+    direction: Direction;
     keymap: { [key in Keycode]?: Direction };
 }
 
@@ -39,6 +40,7 @@ export const controllableObjectDefaults: ControllableObject = {
                 () =>
                 {
                     const nextCoordinate = calcMovement(this as BaseObject, direction, speed)
+                    this.direction = direction
                     if (onMove) onMove(this, direction, nextCoordinate)
                     Object.assign(this, nextCoordinate)
                 }
@@ -47,6 +49,7 @@ export const controllableObjectDefaults: ControllableObject = {
     },
 
     speed: 10,
+    direction: Direction.Up,
     keymap: {
         [Keycode.W]: Direction.Up,
         [Keycode.A]: Direction.Left,

@@ -72,9 +72,15 @@ export default class GameProcess
 
     private static gameLoopFn = gameLoopFn
 
+    static mapWidth: number
+    static mapHeight: number
+
     static initialize = once((config: GameProcessInitializeConfig) =>
     {
         Render.initialize(config)
+        GameProcess.mapHeight = config.mapHeight
+        GameProcess.mapWidth = config.mapWidth
+
         nodelayKeydown(window, ({ code }) =>
         {
             GameProcess.KeymapBindings[code as Keycode]()

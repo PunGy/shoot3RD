@@ -13,7 +13,19 @@ export const PANZER_SPEED = 10
 export const PANZER_SIZE = 40
 
 export const CreatePanzer = ({ x, y, arbiter }: Panzer) => (
-    ObjectBuilder({ x, y, width: PANZER_SIZE, height: PANZER_SIZE, texture: arbiter === 'player' ? PlayerPanzer : EnemyPanzer })
-        .makeControllable({ speed: PANZER_SPEED })
+    ObjectBuilder(
+        {
+            x,
+            y,
+            class: arbiter,
+            width: PANZER_SIZE,
+            height: PANZER_SIZE,
+            texture: arbiter === 'player' ? PlayerPanzer : EnemyPanzer,
+        },
+    )
+        .makeControllable({
+            speed: PANZER_SPEED,
+            rotateOnMove: true,
+        })
         .complete()
 )
