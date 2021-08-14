@@ -5,7 +5,7 @@ import { CreatePanzer } from './objects/panzer'
 
 export async function start()
 {
-    GameProcess.initialize({ mapHeight: 600, mapWidth: 600 })
+    GameProcess.initialize({ keydownType: 'nodelayOne', mapHeight: 600, mapWidth: 600 })
 
     const player = CreatePanzer({ x: 0, y: 0, arbiter: 'player' })
     player.focus()

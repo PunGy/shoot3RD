@@ -4,6 +4,7 @@ import Render from '@engine/Render'
 import { once } from '@src/utils/once'
 import RenderImage from '@src/engine/Render/RenderImage'
 import { Keycode } from '@src/engine/Objects/ControllableObject'
+import { nodelayKeydown } from '@engine/GameProcess/keydownHandlers'
 
 export type State = 'play'|'menu'
 export interface BackgroundImage {
@@ -12,32 +13,6 @@ export interface BackgroundImage {
     img: HTMLImageElement;
 }
 export type keyAction = () => void
-
-type keydownEventListener = (ev: WindowEventMap['keydown']|HTMLElementEventMap['keydown']) => void
-const nodelayKeydown = <T extends {
-    addEventListener: (
-        type: 'keydown'|'keyup',
-        listener: keydownEventListener,
-    ) => void;
-}>(elem: T, listener: keydownEventListener, repeatSpeed = 70) =>
-{
-    const intervalIds: Record<string, number> = {}
-    elem.addEventListener('keydown', (event) =>
-    {
-        if (intervalIds[event.code] == null)
-        {
-            intervalIds[event.code] = (setInterval as Window['setInterval'])(() => listener(event), repeatSpeed)
-        }
-    })
-    elem.addEventListener('keyup', ({ code }) =>
-    {
-        if (intervalIds[code] != null)
-        {
-            clearInterval(intervalIds[code])
-            delete intervalIds[code]
-        }
-    })
-}
 
 const codes: Array<Keycode> = [
     Keycode.W,
@@ -54,6 +29,7 @@ const codes: Array<Keycode> = [
 export interface GameProcessInitializeConfig {
     mapWidth?: number;
     mapHeight?: number;
+    keydownType?: 'nodelayMulti' | 'nodelayOne' | 'defaultWeb';
 }
 
 export default class GameProcess
@@ -75,16 +51,26 @@ export default class GameProcess
     static mapWidth: number
     static mapHeight: number
 
-    static initialize = once((config: GameProcessInitializeConfig) =>
-    {
-        Render.initialize(config)
-        GameProcess.mapHeight = config.mapHeight
-        GameProcess.mapWidth = config.mapWidth
+    static keydownType: 'nodelayMulti' | 'nodelayOne' | 'defaultWeb'
 
-        nodelayKeydown(window, ({ code }) =>
+    static initialize = once(({ keydownType = 'nodelayMulti', mapWidth, mapHeight }: GameProcessInitializeConfig) =>
+    {
+        Render.initialize({ mapWidth, mapHeight })
+
+        GameProcess.mapHeight = mapHeight
+        GameProcess.mapWidth = mapWidth
+        GameProcess.keydownType = keydownType
+
+        const listener = ({ code }: KeyboardEvent) =>
         {
-            GameProcess.KeymapBindings[code as Keycode]()
-        })
+            const handler = GameProcess.KeymapBindings[code as Keycode]
+            if (handler) handler()
+        }
+
+        if (GameProcess.keydownType === 'defaultWeb')
+            window.addEventListener('keydown', listener)
+        else
+            nodelayKeydown(window, listener, GameProcess.keydownType === 'nodelayMulti' ? 'multiple' : 'one')
     })
 
     static startGame()

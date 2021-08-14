@@ -4,6 +4,7 @@ import { once } from '@src/utils/once'
 import type { GameProcessInitializeConfig, BackgroundImage } from '@src/engine/GameProcess'
 import RenderImage from '@src/engine/Render/RenderImage'
 
+type RenderInitializeConfig = Pick<GameProcessInitializeConfig, 'mapWidth'|'mapHeight'>
 
 export default class Render
 {
@@ -15,7 +16,7 @@ export default class Render
     /**
      * Initialize render
      */
-    static initialize = once(({ mapWidth, mapHeight }: GameProcessInitializeConfig) =>
+    static initialize = once(({ mapWidth, mapHeight }: RenderInitializeConfig) =>
     {
         Render.canvasEl = document.getElementById('world') as HTMLCanvasElement
         Render.ctx = Render.canvasEl.getContext('2d')
