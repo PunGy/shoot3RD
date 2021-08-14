@@ -10,11 +10,12 @@ export enum Keycode {
     D = 'KeyD',
     Escape = 'Escape',
 
-    ArrowLeft = 'ArrowUp',
-    ArrowUp = 'ArrowLeft',
-    ArrowRight = 'ArrowDown',
-    ArrowDown = 'ArrowRight',
+    ArrowLeft = 'ArrowLeft',
+    ArrowUp = 'ArrowUp',
+    ArrowRight = 'ArrowRight',
+    ArrowDown = 'ArrowDown',
 }
+
 
 export interface ControllableObject
 {
@@ -22,10 +23,21 @@ export interface ControllableObject
     focus: () => void;
 
     onMove?: (obj: ControllableObject & BaseObject, direction: Direction, nextCoordinate: Coordinate) => void;
+    // based on preMove decides move or not further on nextCoordinate
+    preMove?: (obj: ControllableObject & BaseObject, nextCoordinate: Coordinate) => boolean;
 
     speed: number; // in pixels/sec
     direction: Direction;
     keymap: { [key in Keycode]?: Direction };
+}
+
+export const worldBoundariesCollider = (obj: ControllableObject & BaseObject, nextCoordinate: Coordinate): boolean => {
+    const { x, y } = nextCoordinate
+
+    const okayY = y >= 0 && y + obj.height <= GameProcess.mapHeight
+    const okayX = x >= 0 && x + obj.width <= GameProcess.mapWidth
+
+    return okayY && okayX
 }
 
 export const controllableObjectDefaults: ControllableObject = {
@@ -33,27 +45,31 @@ export const controllableObjectDefaults: ControllableObject = {
 
     focus()
     {
-        const { keymap, speed, onMove } = this as ControllableObject
+        const { keymap, speed, onMove, preMove } = this as ControllableObject
 
         GameProcess.setKeymap(mapObject(
             keymap as Record<Keycode, Direction>, (direction) => (
                 () =>
                 {
                     const nextCoordinate = calcMovement(this as BaseObject, direction, speed)
-                    this.direction = direction
+
+                    if (preMove != null && !preMove(this, nextCoordinate)) return
+
                     if (onMove) onMove(this, direction, nextCoordinate)
+                    this.direction = direction
                     Object.assign(this, nextCoordinate)
                 }
             )),
         )
     },
 
+    preMove: worldBoundariesCollider,
     speed: 10,
     direction: Direction.Up,
     keymap: {
-        [Keycode.W]: Direction.Up,
-        [Keycode.A]: Direction.Left,
-        [Keycode.S]: Direction.Down,
-        [Keycode.D]: Direction.Right,
+        [Keycode.ArrowUp]: Direction.Up,
+        [Keycode.ArrowLeft]: Direction.Left,
+        [Keycode.ArrowDown]: Direction.Down,
+        [Keycode.ArrowRight]: Direction.Right,
     },
 }

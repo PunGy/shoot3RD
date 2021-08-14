@@ -24,6 +24,13 @@ export interface ObjectBuilderInstance<ObjectType>
     complete: () => ObjectType;
 }
 
+const angleTable = new Map([
+    [Direction.Up, 0],
+    [Direction.Right, 90],
+    [Direction.Down, 180],
+    [Direction.Left, 240],
+])
+
 export const ObjectBuilder = (baseObjectConfig: Partial<BaseObject> = {}): ObjectBuilderInstance<BaseObject> => ({
     resultObject: { ...baseObjectDefaultValues, ...baseObjectConfig },
 
@@ -39,15 +46,7 @@ export const ObjectBuilder = (baseObjectConfig: Partial<BaseObject> = {}): Objec
         {
             (this.resultObject as ControllableObject).onMove = (obj, direction, nextCoordinate) => {
                 if (config.onMove) config.onMove(obj, direction, nextCoordinate)
-                obj.angle = direction === Direction.Up
-                    ? 0
-                    : direction === Direction.Right
-                        ? 90
-                        : direction === Direction.Down
-                            ? 180
-                            : direction === Direction.Left
-                                ? 240
-                                : 0
+                obj.angle = angleTable.get(direction)
             }
         }
         return this
