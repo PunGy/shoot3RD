@@ -2,7 +2,6 @@ import { BaseObject, baseObjectDefaultValues } from './BaseObject'
 import { ControllableObject, controllableObjectDefaults } from './ControllableObject'
 import { DynamicObject } from './DynamicObject'
 
-
 export interface ObjectBuilderInstance<ObjectType>
 {
     resultObject: ObjectType;
@@ -20,18 +19,18 @@ export interface ObjectBuilderInstance<ObjectType>
 export const ObjectBuilder = (baseObjectConfig: Partial<BaseObject> = {}): ObjectBuilderInstance<BaseObject> => ({
     resultObject: { ...baseObjectDefaultValues, ...baseObjectConfig },
 
-    makeDynamic (config)
+    makeDynamic(config)
     {
         Object.assign(this.resultObject, config)
         return this
     },
-    makeControllable (config)
+    makeControllable(config)
     {
         Object.assign(this.resultObject, controllableObjectDefaults, config)
         return this
     },
 
-    complete ()
+    complete()
     {
         return this.resultObject
     },

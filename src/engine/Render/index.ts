@@ -1,8 +1,9 @@
 import RenderPrimitives from './RenderPrimitives'
-import { BaseObject } from '@engine/Objects/BaseObject'
+import type { BaseObject } from '@engine/Objects/BaseObject'
 import { once } from '@src/utils/once'
-import { BackgroundImage } from '@src/engine/GameProcess'
+import type { GameProcessInitializeConfig, BackgroundImage } from '@src/engine/GameProcess'
 import RenderImage from '@src/engine/Render/RenderImage'
+
 
 export default class Render
 {
@@ -14,7 +15,7 @@ export default class Render
     /**
      * Initialize render
      */
-    static initialize = once(() =>
+    static initialize = once(({ mapWidth, mapHeight }: GameProcessInitializeConfig) =>
     {
         Render.canvasEl = document.getElementById('world') as HTMLCanvasElement
         Render.ctx = Render.canvasEl.getContext('2d')
@@ -23,8 +24,8 @@ export default class Render
         Render.renderImage = new RenderImage(Render.ctx)
 
         const { innerWidth, innerHeight } = window
-        Render.canvasEl.width = innerWidth
-        Render.canvasEl.height = innerHeight
+        Render.canvasEl.width = mapWidth ?? innerWidth
+        Render.canvasEl.height = mapHeight ?? innerHeight
     })
 
     static draw(object: BaseObject)

@@ -3,7 +3,6 @@ export default class RenderImage
     private ctx: CanvasRenderingContext2D
     private imageCache: Record<string, HTMLImageElement> = {}
 
-
     constructor(ctx: CanvasRenderingContext2D)
     {
         this.ctx = ctx
@@ -11,8 +10,7 @@ export default class RenderImage
 
     public async cacheImage(src: string)
     {
-        const image = await RenderImage.createImage(src)
-        this.imageCache[src] = image
+        this.imageCache[src] = await RenderImage.createImage(src)
     }
     public getImageFromCache(src: string)
     {
@@ -24,10 +22,9 @@ export default class RenderImage
         return new Promise<HTMLImageElement>(
             (res) =>
             {
-
                 const img = new Image()
-                img.src = src
 
+                img.src = src
                 img.onload = () => res(img)
             },
         )

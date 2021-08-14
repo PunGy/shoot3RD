@@ -51,6 +51,11 @@ const codes: Array<Keycode> = [
     Keycode.ArrowRight,
 ]
 
+export interface GameProcessInitializeConfig {
+    mapWidth?: number;
+    mapHeight?: number;
+}
+
 export default class GameProcess
 {
     private static objects: Array<BaseObject> = []
@@ -67,9 +72,9 @@ export default class GameProcess
 
     private static gameLoopFn = gameLoopFn
 
-    static initialize = once(() =>
+    static initialize = once((config: GameProcessInitializeConfig) =>
     {
-        Render.initialize()
+        Render.initialize(config)
         nodelayKeydown(window, ({ code }) =>
         {
             GameProcess.KeymapBindings[code as Keycode]()

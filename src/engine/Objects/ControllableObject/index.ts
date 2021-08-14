@@ -1,5 +1,5 @@
 import GameProcess from '@src/engine/GameProcess'
-import { BaseObject, baseObjectDefaultValues } from '@src/engine/Objects/BaseObject'
+import type { BaseObject } from '@src/engine/Objects/BaseObject'
 import { calcMovement, Direction, Coordinate } from '@src/utils/calcMovement'
 import { mapObject } from '@src/utils/mapObject'
 
@@ -16,7 +16,7 @@ export enum Keycode {
     ArrowDown = 'ArrowRight',
 }
 
-export interface ControllableObject extends BaseObject
+export interface ControllableObject
 {
     _type: 'controllable';
     focus: () => void;
@@ -27,7 +27,7 @@ export interface ControllableObject extends BaseObject
     keymap: { [key in Keycode]?: Direction };
 }
 
-export const controllableObjectDefaults: ControllableObject = { ...baseObjectDefaultValues,
+export const controllableObjectDefaults: ControllableObject = {
     _type: 'controllable',
 
     focus()
