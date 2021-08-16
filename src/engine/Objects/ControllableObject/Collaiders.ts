@@ -36,11 +36,10 @@ export const classesCollider: Collider = (activeObject, nextCoordinate) =>
 
     return !objects.some((obj) => (
         activeObject.colliderClasses.includes(obj.class) && (
-            (x >= obj.x) && (x <= obj.x + obj.width)
-            || (x + width >= obj.x) && (x + width <= obj.x + obj.width)
-        ) && (
-            (y >= obj.y) && (y <= obj.y + obj.height)
-            || (y + height >= obj.y) && (y + height <= obj.y + obj.height)
+            x < obj.x + obj.width
+            && x + width > obj.x
+            && y < obj.y + obj.height
+            && y + height > obj.y
         )
     ))
 }
