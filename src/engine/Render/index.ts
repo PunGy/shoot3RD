@@ -37,6 +37,15 @@ export default class Render
             return
         }
 
+        Render.ctx.save()
+
+        const hc = object.x + object.width / 2
+        const vc = object.y + object.height / 2
+
+        Render.ctx.translate(hc, vc)
+        Render.ctx.rotate(object.angle * Math.PI / 180)
+        Render.ctx.translate(-hc, -vc)
+
         Render.ctx.drawImage(
             Render.renderImage.getImageFromCache(object.texture),
             object.x,
@@ -44,6 +53,8 @@ export default class Render
             object.width,
             object.height,
         )
+
+        Render.ctx.restore()
     }
 
     static drawBackground(backgroundImage?: BackgroundImage)

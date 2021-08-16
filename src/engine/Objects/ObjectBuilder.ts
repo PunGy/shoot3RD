@@ -28,7 +28,7 @@ const angleTable = new Map([
     [Direction.Up, 0],
     [Direction.Right, 90],
     [Direction.Down, 180],
-    [Direction.Left, 240],
+    [Direction.Left, 270],
 ])
 
 export const ObjectBuilder = (baseObjectConfig: Partial<BaseObject> = {}): ObjectBuilderInstance<BaseObject> => ({
