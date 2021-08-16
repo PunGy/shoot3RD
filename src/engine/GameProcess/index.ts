@@ -1,7 +1,7 @@
 import gameLoopFn from './gameLoop'
 import { BaseObject } from '@engine/Objects/BaseObject'
 import Render from '@engine/Render'
-import { once } from '@src/utils/once'
+import { once } from '@src/utils/base/once'
 import RenderImage from '@src/engine/Render/RenderImage'
 import { Keycode } from '@src/engine/Objects/ControllableObject'
 import { nodelayKeydown } from '@engine/GameProcess/keydownHandlers'
@@ -95,6 +95,10 @@ export default class GameProcess
         if (typeof object.texture === 'string')
             await Render.renderImage.cacheImage(object.texture)
         GameProcess.objects.push(object)
+    }
+    static getObjects()
+    {
+        return GameProcess.objects
     }
 
     static async setBackgroundImage(imageConfig: Omit<BackgroundImage, 'img'>)

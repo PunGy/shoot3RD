@@ -2,11 +2,16 @@ import EnemyPanzer from '../resources/images/panzers/enemy.png'
 import PlayerPanzer from '../resources/images/panzers/player.png'
 import { ObjectBuilder } from '@engine/Objects/ObjectBuilder'
 
-interface Panzer {
+export enum Arbiter {
+    Player = 'player',
+    AI = 'AI',
+}
+
+export interface Panzer {
     x: number;
     y: number;
 
-    arbiter: 'player'|'AI';
+    arbiter: Arbiter;
 }
 
 export const PANZER_SPEED = 10
@@ -20,11 +25,12 @@ export const CreatePanzer = ({ x, y, arbiter }: Panzer) => (
             class: arbiter,
             width: PANZER_SIZE,
             height: PANZER_SIZE,
-            texture: arbiter === 'player' ? PlayerPanzer : EnemyPanzer,
+            texture: arbiter === Arbiter.Player ? PlayerPanzer : EnemyPanzer,
         },
     )
         .makeControllable({
             speed: PANZER_SPEED,
+            colliderClasses: [Arbiter.AI],
             rotateOnMove: true,
         })
         .complete()

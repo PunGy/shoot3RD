@@ -44,7 +44,8 @@ export const ObjectBuilder = (baseObjectConfig: Partial<BaseObject> = {}): Objec
         Object.assign(this.resultObject, controllableObjectDefaults, config)
         if (rotateOnMove)
         {
-            (this.resultObject as ControllableObject).onMove = (obj, direction, nextCoordinate) => {
+            (this.resultObject as ControllableObject).onMove = (obj, direction, nextCoordinate) =>
+            {
                 if (config.onMove) config.onMove(obj, direction, nextCoordinate)
                 obj.angle = angleTable.get(direction)
             }

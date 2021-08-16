@@ -1,6 +1,6 @@
 import RenderPrimitives from './RenderPrimitives'
 import type { BaseObject } from '@engine/Objects/BaseObject'
-import { once } from '@src/utils/once'
+import { once } from '@src/utils/base/once'
 import type { GameProcessInitializeConfig, BackgroundImage } from '@src/engine/GameProcess'
 import RenderImage from '@src/engine/Render/RenderImage'
 

@@ -1,7 +1,9 @@
 import GameProcess from '@src/engine/GameProcess'
 import type { BaseObject } from '@src/engine/Objects/BaseObject'
 import { calcMovement, Coordinate, Direction } from '@src/utils/calcMovement'
-import { mapObject } from '@src/utils/mapObject'
+import { mapObject } from '@src/utils/base/mapObject'
+import { worldBoundariesCollider, Collider, classesCollider } from '@engine/Objects/ControllableObject/Collaiders'
+import { every } from '@src/utils/base/every'
 
 export enum Keycode {
     W = 'KeyW',
@@ -26,18 +28,11 @@ export interface ControllableObject
     // based on preMove decides move or not further on nextCoordinate
     preMove?: (obj: ControllableObject & BaseObject, nextCoordinate: Coordinate) => boolean;
 
+    colliderClasses?: Array<string>;
+
     speed: number; // in pixels/sec
     direction: Direction;
     keymap: { [key in Keycode]?: Direction };
-}
-
-export const worldBoundariesCollider = (obj: ControllableObject & BaseObject, nextCoordinate: Coordinate): boolean => {
-    const { x, y } = nextCoordinate
-
-    const okayY = y >= 0 && y + obj.height <= GameProcess.mapHeight
-    const okayX = x >= 0 && x + obj.width <= GameProcess.mapWidth
-
-    return okayY && okayX
 }
 
 export const controllableObjectDefaults: ControllableObject = {
@@ -63,13 +58,13 @@ export const controllableObjectDefaults: ControllableObject = {
         )
     },
 
-    preMove: worldBoundariesCollider,
+    preMove: every(worldBoundariesCollider, classesCollider),
     speed: 10,
     direction: Direction.Up,
     keymap: {
-        [Keycode.ArrowUp]: Direction.Up,
-        [Keycode.ArrowLeft]: Direction.Left,
-        [Keycode.ArrowDown]: Direction.Down,
-        [Keycode.ArrowRight]: Direction.Right,
+        [Keycode.W]: Direction.Up,
+        [Keycode.A]: Direction.Left,
+        [Keycode.S]: Direction.Down,
+        [Keycode.D]: Direction.Right,
     },
 }
