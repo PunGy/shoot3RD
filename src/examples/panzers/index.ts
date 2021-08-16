@@ -1,4 +1,4 @@
-import BackgroundImg from './resources/images/background/background.png'
+import BackgroundImg from './resources/images/background/floor.png'
 import GameProcess from '@engine/GameProcess'
 // eslint-disable-next-line import/order
 import { Arbiter, CreatePanzer } from './objects/panzer'
