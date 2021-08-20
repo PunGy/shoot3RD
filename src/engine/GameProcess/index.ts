@@ -3,7 +3,6 @@ import { BaseObject } from '@engine/Objects/BaseObject'
 import Render from '@engine/Render'
 import { once } from '@src/utils/base/once'
 import RenderImage from '@src/engine/Render/RenderImage'
-import { Keycode } from '@src/engine/Objects/ControllableObject'
 import { nodelayKeydown } from '@engine/GameProcess/keydownHandlers'
 
 export type State = 'play'|'menu'
@@ -12,7 +11,20 @@ export interface BackgroundImage {
     splineSize: number;
     img: HTMLImageElement;
 }
-export type keyAction = () => void
+export type KeyAction = () => void
+
+export enum Keycode {
+    W = 'KeyW',
+    A = 'KeyA',
+    S = 'KeyS',
+    D = 'KeyD',
+    Escape = 'Escape',
+
+    ArrowLeft = 'ArrowLeft',
+    ArrowUp = 'ArrowUp',
+    ArrowRight = 'ArrowRight',
+    ArrowDown = 'ArrowDown',
+}
 
 const codes: Array<Keycode> = [
     Keycode.W,
@@ -26,24 +38,29 @@ const codes: Array<Keycode> = [
     Keycode.ArrowRight,
 ]
 
+export type Keymap = Record<Keycode, KeyAction>
+
 export interface GameProcessInitializeConfig {
     mapWidth?: number;
     mapHeight?: number;
     keydownType?: 'nodelayMulti' | 'nodelayOne' | 'defaultWeb';
+
+    globalVariables?: Record<string, any>;
 }
 
 export default class GameProcess
 {
-    private static objects: Array<BaseObject> = []
+    private static objects: Map<string, BaseObject> = new Map()
     private static backgroundImage?: BackgroundImage
 
     private static state: State = 'play'
     private static readonly fps = 20
     private static readonly fpsInterval = 1000 / GameProcess.fps
+    private static objectsId = 0
 
-    private static KeymapBindings = codes.reduce(
+    private static KeymapBindings: Keymap = codes.reduce(
         (keymap, keycode) => ({ ...keymap, [keycode]: (): void => null }),
-        {} as Record<Keycode, keyAction>,
+        {} as Keymap,
     )
 
     private static gameLoopFn = gameLoopFn
@@ -53,13 +70,16 @@ export default class GameProcess
 
     static keydownType: 'nodelayMulti' | 'nodelayOne' | 'defaultWeb'
 
-    static initialize = once(({ keydownType = 'nodelayMulti', mapWidth, mapHeight }: GameProcessInitializeConfig) =>
+    private static globalVariables: Record<string, unknown>
+
+    static initialize = once(({ keydownType = 'nodelayMulti', mapWidth, mapHeight, globalVariables }: GameProcessInitializeConfig) =>
     {
         Render.initialize({ mapWidth, mapHeight })
 
         GameProcess.mapHeight = mapHeight
         GameProcess.mapWidth = mapWidth
         GameProcess.keydownType = keydownType
+        GameProcess.globalVariables = globalVariables
 
         const listener = ({ code }: KeyboardEvent) =>
         {
@@ -94,11 +114,19 @@ export default class GameProcess
     {
         if (typeof object.texture === 'string')
             await Render.renderImage.cacheImage(object.texture)
-        GameProcess.objects.push(object)
+        if (object.id == null) object.id = (++GameProcess.objectsId).toString()
+        GameProcess.objects.set(object.id, object)
     }
+
+    static destroyObject<O extends BaseObject>(object: O, reason?: string)
+    {
+        GameProcess.objects.delete(object.id)
+        if (object.onDestroy) object.onDestroy(reason)
+    }
+
     static getObjects()
     {
-        return GameProcess.objects
+        return Array.from(GameProcess.objects.values())
     }
 
     static async setBackgroundImage(imageConfig: Omit<BackgroundImage, 'img'>)
@@ -108,8 +136,17 @@ export default class GameProcess
         GameProcess.backgroundImage = { ...imageConfig, img }
     }
 
-    static setKeymap(keymap: Record<number, keyAction>)
+    static setKeymap(keymap: Keymap)
     {
         Object.assign(GameProcess.KeymapBindings, keymap)
+    }
+
+    static getGlobalVariables<G extends Record<string, any>>()
+    {
+        return GameProcess.globalVariables as G
+    }
+    static setGlobalVariables<G extends Record<string, any>>(newState: Partial<G>)
+    {
+        return Object.assign(GameProcess.globalVariables, newState)
     }
 }

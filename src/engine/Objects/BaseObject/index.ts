@@ -2,7 +2,7 @@ import DefaultTexture from '@resources/images/blocks/question.png'
 
 export interface BaseObject
 {
-    class?: string;
+    classes?: Array<string>;
     id?: string;
 
     x: number;
@@ -13,6 +13,8 @@ export interface BaseObject
     angle: number;
 
     texture: string | ((object: this, ctx: CanvasRenderingContext2D) => void);
+
+    onDestroy?: (reason?: string) => void;
 }
 
 export const baseObjectDefaultValues: BaseObject = {

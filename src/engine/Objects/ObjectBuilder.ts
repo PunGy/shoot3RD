@@ -1,7 +1,7 @@
 import { BaseObject, baseObjectDefaultValues } from './BaseObject'
 import { ControllableObject, controllableObjectDefaults } from './ControllableObject'
 import { DynamicObject } from './DynamicObject'
-import { Direction } from '@src/utils/calcMovement'
+import { Direction } from '@src/examples/panzers/utils/calcMovement'
 
 export interface ControllableConfig {
     rotateOnMove: boolean;
@@ -17,19 +17,12 @@ export interface ObjectBuilderInstance<ObjectType>
     makeDynamic: (dynamicObjectConfig?: Partial<DynamicObject>) => (
         ObjectBuilderInstance<ObjectType & DynamicObject>
     );
-    addCustomProps: <T extends Record<string, unknown>>(customProps: T) => (
+    addCustomProps: <P, T extends Record<string, P>>(customProps: T) => (
         ObjectBuilderInstance<ObjectType & T>
     );
 
     complete: () => ObjectType;
 }
-
-const angleTable = new Map([
-    [Direction.Up, 0],
-    [Direction.Right, 90],
-    [Direction.Down, 180],
-    [Direction.Left, 270],
-])
 
 export const ObjectBuilder = (baseObjectConfig: Partial<BaseObject> = {}): ObjectBuilderInstance<BaseObject> => ({
     resultObject: { ...baseObjectDefaultValues, ...baseObjectConfig },

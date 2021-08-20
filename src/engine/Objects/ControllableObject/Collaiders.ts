@@ -1,7 +1,8 @@
 import type { ControllableObject } from './index'
 import type { BaseObject } from '@engine/Objects/BaseObject'
-import type { Coordinate } from '@src/utils/calcMovement'
+import type { Coordinate } from '@src/examples/panzers/utils/calcMovement'
 import GameProcess from '@engine/GameProcess'
+import { isIntersection } from '@src/utils/base/isIntersection'
 
 export const getObjectOnPixel = (x: number, y: number) =>
 {
@@ -35,7 +36,7 @@ export const classesCollider: Collider = (activeObject, nextCoordinate) =>
     const objects = GameProcess.getObjects()
 
     return !objects.some((obj) => (
-        activeObject.colliderClasses.includes(obj.class) && (
+        isIntersection(activeObject.colliderClasses, obj.classes) && (
             x < obj.x + obj.width
             && x + width > obj.x
             && y < obj.y + obj.height
